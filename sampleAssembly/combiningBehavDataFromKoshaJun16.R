@@ -1,16 +1,16 @@
 #----------------------------------------------------------------------------------------------------------------------------
 # JUNE16: this script combines and formats various datasets relevant to the
 #
-# PNC-ITC project; dataset were compiled by Kosha on 6/7/16
+# PNC-ITC project; most individual datasets were compiled by Kosha 
 #
 # It produces several datasets for further analysis or processing:
 #
 # 1. dataset with n=453 subjects who have full ITC data to 1) pull out scan dates and 2) to caclulate k-values from ITC data
 # 	/data/joy/BBL/projects/pehlivanovaPncItc/subjectData/demoBehavData/n453_ITC_unique_bblids.csv
 #	
-#	Currently commented out
+#	NB: Currently commented out
 #
-# 2. dataset with n=448 subjects with processed ITC (*only* usable k-values), paths for imaging analysis, and imaging inclusion variables
+# 2. dataset with n=427 subjects with processed ITC (*only* usable k-values), paths for imaging analysis, and imaging inclusion variables
 #	/data/joy/BBL/projects/pehlivanovaPncItc/subjectData/demoBehavData/nXXX_pnc_itc_whole_sample_YYYYMMDD.csv
 #	/data/joy/BBL/projects/pehlivanovaPncItc/subjectData/demoBehavData/nXXX_pnc_itc_whole_sample_YYYYMMDD.rds
 #
