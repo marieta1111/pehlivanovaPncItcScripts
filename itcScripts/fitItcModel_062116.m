@@ -5,6 +5,7 @@ clear all
 
 % read in behavioral data from csv file
 cd('/data/joy/BBL/projects/pehlivanovaPncItc/pehlivanovaPncItcScripts/itcScripts')
+
 importingItcData
 
 % compiling list of relevant delay discounting variables
@@ -28,6 +29,9 @@ rtsITC=[kddisc_trr_01 kddisc_trr_02 kddisc_trr_03 kddisc_trr_04 kddisc_trr_05 ..
     kddisc_trr_26 kddisc_trr_27 kddisc_trr_28 kddisc_trr_29 kddisc_trr_30 ...
     kddisc_trr_31 kddisc_trr_32 kddisc_trr_33 kddisc_trr_34]';
 
+%% save data to use later
+% save('/data/joy/BBL/projects/pehlivanovaPncItc/subjectData/itcRiskData/rawItcAug2016.mat','bblid','choicesITC','rtsITC')
+
 % there are no missing values here because of how the original file was
 % constructed
 
@@ -45,6 +49,7 @@ pctPred_new=nan(size(choicesITC,2),1);
 noise_new=nan(size(choicesITC,2),1);
 later=nan(size(choicesITC,2),1); % how many delayed choices
 rsqMRN=nan(size(choicesITC,2),1); % R2 from logistic model
+tjur=nan(size(choicesITC,2),1); % tjur's coefficient of discrimination
 
 tic
 for i=1:size(choicesITC,2)
@@ -54,10 +59,10 @@ i
     
     % old script, summer 2014    
     %[hyperbolic_old] = ITCanalysis(choicesITC(:,i),itemOrderITC(:,2),itemOrderITC(:,3),...
-     %       itemOrderITC(:,4),itemOrderITC(:,5),rtsITC(:,i),bblid(i))
+    %       itemOrderITC(:,4),itemOrderITC(:,5),rtsITC(:,i),bblid(i))
         
     % new script from Arthur modified by Becca, summer 2016
-    [hyperbolic_new] = ITCScreenAnalysis(choicesITC(:,i),itemOrderITC(:,2),...
+    [hyperbolic_new] = ITCScreenAnalysis_mp(choicesITC(:,i),itemOrderITC(:,2),...
             itemOrderITC(:,4),itemOrderITC(:,5),rtsITC(:,i))
                
     k_new(i,1)=hyperbolic_new.k;
@@ -68,15 +73,7 @@ i
     noise_new(i,1)=hyperbolic_new.noise;
     rsqMRN(i,1)=hyperbolic_new.R2mnrfit;
     later(i,1)=sum(choicesITC(:,i));
-    
-    %{
-    k_new(i,2)=hyperbolic_old.k;
-    rsq_new(i,2)=hyperbolic_old.r2;
-    corr1_new(i,2)=hyperbolic_old.RTandSubjValueCorr;
-    medRT_new(i,2)=hyperbolic_old.medianRT;
-    pctPred_new(i,2)=hyperbolic_old.percentPredicted;
-    noise_new(i,2)=hyperbolic_old.noise;
-    %}
+    tjur(i,1)=hyperbolic_new.tjur;
     
     end
     
@@ -84,18 +81,22 @@ end
 toc
 
 % writing out ITC results in a table to export into a csv
-row_names =  {'bblid'; 'k'; 'logk'; 'hypR2'; 'mrnR2'; 'corr'; 'medRT'; 'noise'; ...
-    'pctPred'; 'delayedCh'}
+row_names =  {'bblid'; 'k'; 'logk'; 'kHypR2'; 'kMrnR2'; 'kTjur'; 'kCorr'; 'kMedRT'; 'kNoise'; ...
+    'kPctPred'; 'kDelayedCh'}
 
-itc_all=table(bblid, k_new,log(k_new), rsq_new, rsqMRN, corr1_new, medRT_new, ...
+itc_all=table(bblid, k_new,log(k_new), rsq_new, rsqMRN, tjur, corr1_new, medRT_new, ...
     noise_new, pctPred_new, later, 'VariableNames', row_names)
 
 % saving to a csv file for R 
-writetable(itc_all,'/data/joy/BBL/projects/pehlivanovaPncItc/subjectData/itcRiskData/n453_Kvalues_06_2016.csv','Delimiter',',')
+writetable(itc_all,'/data/joy/BBL/projects/pehlivanovaPncItc/subjectData/itcRiskData/n453_Kvalues_08162016.csv','Delimiter',',')
 
 % saving in matlab format, just in case
-save('/data/joy/BBL/projects/pehlivanovaPncItc/subjectData/itcRiskData/itcJune2016.mat', ...
-    'k_new','rsq_new', 'rsqMRN', 'noise_new','medRT_new','pctPred_new','corr1_new')
+save('/data/joy/BBL/projects/pehlivanovaPncItc/subjectData/itcRiskData/itcAug152016.mat', ...
+    'k_new','rsq_new', 'rsqMRN','tjur', 'noise_new','medRT_new','pctPred_new','corr1_new')
+
+
+
+
 
    
 
